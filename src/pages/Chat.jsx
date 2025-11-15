@@ -45,7 +45,11 @@ export default function Chat() {
       animate={{ opacity: 1 }}
       className="chat-wrapper"
     >
-      <Container fluid className="d-flex flex-column vh-100 p-0 chat-container">
+      <Container
+        fluid
+        className="d-flex flex-column  p-0 chat-container"
+        style={{ height: "85%" }}
+      >
         {/* Chat Messages Area */}
         <div className="chat-box flex-grow-1 overflow-auto p-4">
           {messages.length === 0 && (
@@ -66,7 +70,8 @@ export default function Chat() {
           className="chat-input d-flex p-3 bg-white shadow-sm"
         >
           <Form.Control
-            type="text"
+            as="textarea"
+            rows={1}
             placeholder="Type your message..."
             value={input}
             onChange={(e) => setInput(e.target.value)}

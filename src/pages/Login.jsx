@@ -20,6 +20,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      localStorage.clear();
       const res = await API.post("login/", form);
       localStorage.setItem("access", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);

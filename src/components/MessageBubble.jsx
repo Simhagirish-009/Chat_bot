@@ -14,7 +14,7 @@ export default function MessageBubble({ sender, message }) {
         className={`p-2 rounded-3 shadow-sm ${
           isUser ? "bg-primary text-white" : "bg-secondary text-light"
         }`}
-        style={{ maxWidth: "70%" }}
+        style={{ maxWidth: "70%", whiteSpace: "pre-wrap" }}
       >
         {message}
       </div>

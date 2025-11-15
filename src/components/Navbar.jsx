@@ -29,10 +29,23 @@ export default function AppNavbar() {
               </Button>
             </>
           ) : (
-            
-            <Button variant="danger" onClick={handleLogout}>
-              Logout
-            </Button>
+            <div
+              className="d-flex justify-content-between"
+              style={{ gap: "40px" }}
+            >
+              <Nav.Link onClick={() => navigate("/chat")}>
+                Home
+              </Nav.Link>
+              <Nav.Link onClick={() => navigate("/characters")}>
+                Chat with Characters
+              </Nav.Link>
+              <Nav.Link onClick={() => navigate("/history")}>
+                History
+              </Nav.Link>
+              <Button variant="danger" onClick={handleLogout}>
+                Logout
+              </Button>
+            </div>
           )}
         </Nav>
       </Container>

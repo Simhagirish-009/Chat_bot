@@ -5,6 +5,9 @@ import Chat from "./pages/Chat";
 import Welcome from "./pages/Welcome";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProtectedLayout from "./layouts/ProtectedLayout"; // ⬅️ import layout
+import CharacterSelect from "./pages/CharacterSelect";
+import History from "./pages/History";
+import CharacterChat from "./pages/CharacterChat";
 
 
 export default function App() {
@@ -21,6 +24,9 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<ProtectedLayout />}>
             <Route path="/chat" element={<Chat />} />
+            <Route path="/charchat" element={<CharacterChat />} />
+            <Route path="/characters" element={<CharacterSelect />} />
+            <Route path="/history" element={<History/>}/>
           </Route>
         </Route>
       </Routes>
