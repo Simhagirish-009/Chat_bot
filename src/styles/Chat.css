@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 .chat-wrapper {
   background: linear-gradient(135deg, #f0f2f5 0%, #dfe9f3 100%);
   height: 100vh;
@@ -37,4 +39,12 @@
 .chat-box::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
+}
+.bubble-animate {
+  animation: fadeInUp 0.25s ease-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }

@@ -1,23 +1,15 @@
-import { motion } from "framer-motion";
-
 export default function MessageBubble({ sender, message }) {
   const isUser = sender === "user";
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={`d-flex ${
-        isUser ? "justify-content-end" : "justify-content-start"
-      } mb-2`}
-    >
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-2`}>
       <div
-        className={`p-2 rounded-3 shadow-sm ${
-          isUser ? "bg-primary text-white" : "bg-secondary text-light"
-        }`}
+        className={`px-4 py-2 rounded-2xl shadow 
+          ${isUser ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-900"}`}
         style={{ maxWidth: "70%", whiteSpace: "pre-wrap" }}
       >
         {message}
       </div>
-    </motion.div>
+    </div>
   );
 }

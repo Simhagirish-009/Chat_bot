@@ -1,4 +1,3 @@
-import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 export default function AppNavbar() {
@@ -11,44 +10,63 @@ export default function AppNavbar() {
   };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
-      <Container fluid>
-        <Navbar.Brand>AI ChatBot 🤖</Navbar.Brand>
-        <Nav className="ms-auto">
-          {!isAuth ? (
-            <>
-              <Button
-                variant="outline-light"
-                className="me-2"
-                onClick={() => navigate("/login")}
-              >
-                Login
-              </Button>
-              <Button variant="light" onClick={() => navigate("/register")}>
-                Register
-              </Button>
-            </>
-          ) : (
-            <div
-              className="d-flex justify-content-between"
-              style={{ gap: "40px" }}
-            >
-              <Nav.Link onClick={() => navigate("/chat")}>
-                Home
-              </Nav.Link>
-              <Nav.Link onClick={() => navigate("/characters")}>
-                Chat with Characters
-              </Nav.Link>
-              <Nav.Link onClick={() => navigate("/history")}>
-                History
-              </Nav.Link>
-              <Button variant="danger" onClick={handleLogout}>
-                Logout
-              </Button>
-            </div>
-          )}
-        </Nav>
-      </Container>
-    </Navbar>
+    <nav className="bg-gray-900 text-white px-6 py-4 shadow-md flex justify-between items-center">
+      {/* Brand */}
+      <div
+        className="text-2xl font-bold flex items-center gap-2 cursor-pointer"
+        onClick={() => navigate("/")}
+      >
+        AI ChatBot 🤖
+      </div>
+
+      {/* Auth Navigation */}
+      {!isAuth ? (
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate("/login")}
+            className="px-4 py-2 border border-white rounded-lg hover:bg-white hover:text-gray-900 transition"
+          >
+            Login
+          </button>
+
+          <button
+            onClick={() => navigate("/register")}
+            className="px-4 py-2 bg-white text-gray-900 rounded-lg hover:bg-gray-200 transition"
+          >
+            Register
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-10">
+          <button
+            onClick={() => navigate("/chat")}
+            className="hover:text-blue-400 transition"
+          >
+            Home
+          </button>
+
+          <button
+            onClick={() => navigate("/characters")}
+            className="hover:text-blue-400 transition"
+          >
+            Chat with Characters
+          </button>
+
+          <button
+            onClick={() => navigate("/history")}
+            className="hover:text-blue-400 transition"
+          >
+            History
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-600 rounded-lg hover:bg-red-700 transition"
+          >
+            Logout
+          </button>
+        </div>
+      )}
+    </nav>
   );
 }

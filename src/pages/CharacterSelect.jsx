@@ -1,5 +1,3 @@
-import React from "react";
-import { Card, Button, Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import kakashiImg from "../assets/Kakashi1.jpg";
 import narutoImg from "../assets/Naruto2.png";
@@ -9,54 +7,54 @@ import rengokuImg from "../assets/Rengoku1.jpeg";
 import tanjiroImg from "../assets/Tanjiro.jpg";
 import shinobuImg from "../assets/Shinobu.jpg";
 import itachiImg from "../assets/Itachi.jpg";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const characters = [
-  { name: "Naruto Uzumaki", img: narutoImg, theme: "orange" },
-  { name: "Sasuke Uchiha", img: sasukeImg, theme: "blue" },
-  { name: "Kakashi Hatake", img: kakashiImg, theme: "gray" },
-  { name: "Itachi Uchiha", img: itachiImg, theme: "maroon" },
-  { name: "Sanemi Shinazugawa", img: sanemiImg, theme: "green" },
-  { name: "Kyojuro Rengoku", img: rengokuImg, theme: "red" },
-  { name: "Tanjiro Kamado", img: tanjiroImg, theme: "teal" },
-  { name: "Shinobu Kocho", img: shinobuImg, theme: "purple" },
+  { name: "Naruto Uzumaki", img: narutoImg },
+  { name: "Sasuke Uchiha", img: sasukeImg },
+  { name: "Kakashi Hatake", img: kakashiImg },
+  { name: "Itachi Uchiha", img: itachiImg },
+  { name: "Sanemi Shinazugawa", img: sanemiImg },
+  { name: "Kyojuro Rengoku", img: rengokuImg },
+  { name: "Tanjiro Kamado", img: tanjiroImg },
+  { name: "Shinobu Kocho", img: shinobuImg },
 ];
 
 export default function CharacterSelect() {
   const navigate = useNavigate();
 
   const handleSelect = (char) => {
-    navigate("/charchat", { state: { character: char } }); // 👈 Pass full character object
+    navigate("/charchat", { state: { character: char } });
   };
 
   return (
-    <Container className="py-5">
-      <h2 className="text-center mb-4 fw-bold">Select Your Character</h2>
-      <Row className="g-4 justify-content-center">
+    <div className="py-10 px-4">
+      <h2 className="text-center text-3xl font-bold mb-8">
+        Select Your Character
+      </h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {characters.map((char) => (
-          <Col key={char.name} xs={12} sm={6} md={4} lg={3}>
-            <Card className="shadow-lg border-0 h-100 text-center">
-              <Card.Img
-                variant="top"
-                src={char.img}
-                alt={char.name}
-                style={{
-                  height: "250px",
-                  objectFit: "contain",
-                  borderTopLeftRadius: "12px",
-                  borderTopRightRadius: "12px",
-                }}
-              />
-              <Card.Body>
-                <Card.Title>{char.name}</Card.Title>
-                <Button variant="primary" onClick={() => handleSelect(char)}>
-                  Chat
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
+          <div
+            key={char.name}
+            className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 cursor-pointer"
+            onClick={() => handleSelect(char)}
+          >
+            <img
+              src={char.img}
+              alt={char.name}
+              className="w-full h-60 object-contain bg-gray-100"
+            />
+
+            <div className="p-4 text-center">
+              <h3 className="font-semibold text-lg mb-2">{char.name}</h3>
+
+              <button className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                Chat
+              </button>
+            </div>
+          </div>
         ))}
-      </Row>
-    </Container>
+      </div>
+    </div>
   );
 }

@@ -1,9 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Container, Form, Button, Spinner } from "react-bootstrap";
-import { motion } from "framer-motion";
 import axios from "../api/axios";
 import MessageBubble from "../components/MessageBubble";
-import "../styles/Chat.css"; // 👈 add a new CSS file
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -40,54 +37,49 @@ export default function Chat() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="chat-wrapper"
-    >
-      <Container
-        fluid
-        className="d-flex flex-column  p-0 chat-container"
-        style={{ height: "85%" }}
+    <div className="w-full h-[85vh] flex flex-col bg-gray-100">
+      {/* Chat Box */}
+      <div className="grow overflow-y-auto p-4 space-y-4">
+        {messages.length === 0 && (
+          <div className="text-center text-gray-500 mt-10">
+            <p className="text-lg">👋 Start chatting with your AI assistant!</p>
+          </div>
+        )}
+
+        {messages.map((msg, i) => (
+          <MessageBubble key={i} sender={msg.sender} message={msg.message} />
+        ))}
+
+        <div ref={endRef}></div>
+      </div>
+
+      {/* Input Box */}
+      <form
+        onSubmit={sendMessage}
+        className="bg-white p-4 flex items-center gap-3 shadow-lg"
       >
-        {/* Chat Messages Area */}
-        <div className="chat-box flex-grow-1 overflow-auto p-4">
-          {messages.length === 0 && (
-            <div className="text-center text-muted mt-5">
-              <p className="lead">👋 Start chatting with your AI assistant!</p>
-            </div>
-          )}
+        <textarea
+          rows={1}
+          value={input}
+          disabled={loading}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type your message..."
+          className="text-black grow resize-none px-4 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+        />
 
-          {messages.map((msg, i) => (
-            <MessageBubble key={i} sender={msg.sender} message={msg.message} />
-          ))}
-          <div ref={endRef}></div>
-        </div>
-
-        {/* Input Area */}
-        <Form
-          onSubmit={sendMessage}
-          className="chat-input d-flex p-3 bg-white shadow-sm"
+        <button
+          type="submit"
+          disabled={loading}
+          className={`px-6 py-2 rounded-full text-white font-semibold transition
+            ${loading ? "bg-blue-300" : "bg-blue-600 hover:bg-blue-700"}`}
         >
-          <Form.Control
-            as="textarea"
-            rows={1}
-            placeholder="Type your message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={loading}
-            className="rounded-pill px-3 py-2"
-          />
-          <Button
-            type="submit"
-            variant="primary"
-            className="rounded-pill ms-2 px-4"
-            disabled={loading}
-          >
-            {loading ? <Spinner animation="border" size="sm" /> : "Send"}
-          </Button>
-        </Form>
-      </Container>
-    </motion.div>
+          {loading ? (
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+          ) : (
+            "Send"
+          )}
+        </button>
+      </form>
+    </div>
   );
 }

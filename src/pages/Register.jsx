@@ -1,16 +1,17 @@
 import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import API from "../api/axios";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
-  Form,
-  Button,
   Card,
-  Container,
-  Alert,
-  Navbar,
-  Nav,
-} from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 function Register() {
   const [form, setForm] = useState({
@@ -20,114 +21,98 @@ function Register() {
     password: "",
     password2: "",
   });
+
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
     try {
       await API.post("register/", form);
       navigate("/login");
     } catch (err) {
-      setError(err.response?.data?.password || "Registration failed");
+      setError(
+        err.response?.data?.password ||
+          err.response?.data?.detail ||
+          "Registration failed"
+      );
     }
   };
 
   return (
-    <>
-      {/* Main Section */}
-      <Container
-        fluid
-        className="d-flex justify-content-center align-items-center vh-100"
-        style={{
-          background: "linear-gradient(135deg, #0d6efd 0%, #6610f2 100%)",
-        }}
-      >
-        <Card
-          className="p-4 shadow-lg border-0"
-          style={{
-            width: "100%",
-            maxWidth: "400px",
-            borderRadius: "20px",
-          }}
-        >
-          <h3 className="text-center mb-3 fw-bold text-dark">
-            Create Account 🚀
-          </h3>
-          <p className="text-center text-muted mb-4">
-            Register to start generating question papers
-          </p>
+    <div className="min-h-screen flex items-center justify-center body">
+      <Card className="w-full max-w-md bg-slate-950/70  border-slate-800 shadow-2xl">
+        <CardHeader className="text-center space-y-2">
+          <CardTitle className="text-indigo-200 text-3xl font-extrabold">
+            Create Account
+          </CardTitle>
+          <CardDescription className="text-slate-400">
+            Register to start chatting with Bittu AI
+          </CardDescription>
+        </CardHeader>
 
-          {error && <Alert variant="danger">{error}</Alert>}
+        <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Control
-                placeholder="Username"
-                onChange={(e) => setForm({ ...form, username: e.target.value })}
-                className="py-2"
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Control
-                placeholder="Email"
-                type="email"
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="py-2"
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Control
-                placeholder="Full Name"
-                onChange={(e) =>
-                  setForm({ ...form, full_name: e.target.value })
-                }
-                className="py-2"
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Control
-                placeholder="Password"
-                type="password"
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="py-2"
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-4">
-              <Form.Control
-                placeholder="Confirm Password"
-                type="password"
-                onChange={(e) =>
-                  setForm({ ...form, password2: e.target.value })
-                }
-                className="py-2"
-                required
-              />
-            </Form.Group>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              type="text"
+              placeholder="Username"
+              required
+              onChange={(e) => setForm({ ...form, username: e.target.value })}
+            />
 
-            <Button
-              type="submit"
-              variant="primary"
-              className="w-100 py-2 fw-semibold"
-              style={{ borderRadius: "10px" }}
-            >
+            <Input
+              type="email"
+              placeholder="Email"
+              required
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
+
+            <Input
+              type="text"
+              placeholder="Full Name"
+              required
+              onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+            />
+
+            <Input
+              type="password"
+              placeholder="Password"
+              required
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+            />
+
+            <Input
+              type="password"
+              placeholder="Confirm Password"
+              required
+              onChange={(e) => setForm({ ...form, password2: e.target.value })}
+            />
+
+            <Button type="submit" size="lg" className="w-full bg-blue-900 hover:bg-blue-500">
               Register
             </Button>
-          </Form>
+          </form>
 
-          <p className="text-center mt-3 text-muted">
+          <p className="text-center text-sm text-slate-400 mt-6">
             Already have an account?{" "}
-            <a href="/login" className="text-decoration-none fw-semibold">
+            <Link
+              to="/login"
+              className="text-indigo-400 hover:text-indigo-300 font-medium"
+            >
               Login
-            </a>
+            </Link>
           </p>
-        </Card>
-      </Container>
-    </>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 

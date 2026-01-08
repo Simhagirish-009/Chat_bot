@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "../api/axios";
-import { Button, Spinner } from "react-bootstrap";
 
 export default function History() {
   const [history, setHistory] = useState([]);
@@ -8,10 +7,9 @@ export default function History() {
   const [deleting, setDeleting] = useState(null);
   const [deletingAll, setDeletingAll] = useState(false);
 
-  // Fetch chat history for logged-in user
   const fetchHistory = async () => {
     try {
-      const res = await axios.get("history/"); // backend returns only user's chats
+      const res = await axios.get("history/");
       setHistory(res.data);
     } catch (err) {
       console.error("Error fetching history", err);
@@ -36,12 +34,11 @@ export default function History() {
     }
   };
 
-  // DELETE ALL chat history
   const deleteAllChats = async () => {
     setDeletingAll(true);
     try {
       await axios.delete("history/delete_all/");
-      setHistory([]); // Clear UI
+      setHistory([]);
     } catch (err) {
       console.error("Delete ALL error", err);
     } finally {
@@ -49,56 +46,71 @@ export default function History() {
     }
   };
 
+  // Loading Spinner
   if (loading) {
     return (
-      <div className="text-center mt-5">
-        <Spinner animation="border" />
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="container mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h3>📜 Chat History</h3>
+    <div className="max-w-4xl mx-auto mt-10 px-4">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-2xl font-bold flex items-center gap-2">
+          📜 Chat History
+        </h3>
 
         {history.length > 0 && (
-          <Button
-            variant="danger"
+          <button
             onClick={deleteAllChats}
             disabled={deletingAll}
+            className={`px-4 py-2 rounded-lg text-white transition ${
+              deletingAll
+                ? "bg-red-400 cursor-not-allowed"
+                : "bg-red-600 hover:bg-red-700"
+            }`}
           >
             {deletingAll ? "Deleting..." : "Delete All"}
-          </Button>
+          </button>
         )}
       </div>
 
+      {/* No History */}
       {history.length === 0 ? (
-        <p className="text-muted">No chat history found.</p>
+        <p className="text-gray-500 text-center">No chat history found.</p>
       ) : (
-        <div className="list-group">
+        <div className="flex flex-col gap-4">
           {history.map((item) => (
             <div
               key={item.id}
-              className="list-group-item d-flex justify-content-between align-items-start"
+              className="bg-white rounded-xl shadow p-4 flex justify-between items-start border border-gray-200"
             >
               <div>
-                <strong>{item.character}</strong>
+                <strong className="text-lg font-semibold">
+                  💬 {item.character}
+                </strong>
                 <br />
-                <span className="text-muted small">
+                <span className="text-gray-500 text-sm">
                   {new Date(item.timestamp).toLocaleString()}
                 </span>
-                <p className="mt-2 mb-1">{item.message}</p>
+
+                <p className="mt-2 text-gray-800">{item.message}</p>
               </div>
 
-              <Button
-                variant="danger"
-                size="sm"
-                disabled={deleting === item.id}
+              <button
                 onClick={() => deleteChat(item.id)}
+                disabled={deleting === item.id}
+                className={`px-3 py-1 rounded-md text-white text-sm transition ${
+                  deleting === item.id
+                    ? "bg-red-400 cursor-not-allowed"
+                    : "bg-red-600 hover:bg-red-700"
+                }`}
               >
                 {deleting === item.id ? "Deleting..." : "Delete"}
-              </Button>
+              </button>
             </div>
           ))}
         </div>

@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { Container, Form, Button, Spinner } from "react-bootstrap";
-import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import MessageBubble from "../components/MessageBubble";
@@ -10,7 +8,6 @@ export default function CharacterChat() {
   const navigate = useNavigate();
   const character = state?.character;
 
-  // If user navigates directly without selecting
   if (!character) {
     navigate("/");
     return null;
@@ -21,9 +18,9 @@ export default function CharacterChat() {
   const [loading, setLoading] = useState(false);
   const endRef = useRef(null);
 
-  const scrollToBottom = () =>
+  useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  useEffect(scrollToBottom, [messages]);
+  }, [messages]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -51,7 +48,7 @@ export default function CharacterChat() {
     }
   };
 
-  // 🎨 Character theme styling
+  // Character gradient
   const themeColors = {
     orange: "#FF8700",
     blue: "#1E90FF",
@@ -65,101 +62,73 @@ export default function CharacterChat() {
 
   const bgColor = themeColors[character.theme] || "#FF8700";
 
-  const styles = {
-    wrapper: {
-      position: "relative",
-      height: "100vh",
-      width: "100%",
-      background: `linear-gradient(180deg, ${bgColor}aa, #fff8e5)`,
-      overflow: "hidden",
-    },
-    chatArea: {
-      position: "relative",
-      zIndex: 2,
-      height: "90%",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-    },
-    chatBox: {
-      flexGrow: 1,
-      overflowY: "auto",
-      padding: "1.5rem",
-    },
-    inputArea: {
-      backgroundColor: "rgba(255,255,255,0.95)",
-      borderTop: `3px solid ${bgColor}`,
-      backdropFilter: "blur(6px)",
-    },
-    bgImg: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      objectFit: "contain",
-      opacity: 0.15,
-      zIndex: 0,
-    },
-  };
-
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      style={styles.wrapper}
+    <div
+      className="relative w-full h-screen overflow-hidden"
+      style={{
+        background: `linear-gradient(180deg, ${bgColor}bb, #fff8e5)`,
+      }}
     >
-      <img src={character.img} alt={character.name} style={styles.bgImg} />
+      {/* Background image */}
+      <img
+        src={character.img}
+        alt={character.name}
+        className="absolute inset-0 w-full h-full object-contain opacity-20"
+      />
 
-      <Container fluid className="p-0" style={styles.chatArea}>
-        <div style={styles.chatBox}>
+      {/* Chat Area */}
+      <div className="relative z-10 flex flex-col h-full">
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4">
           {messages.length === 0 && (
-            <div className="text-center text-dark mt-5">
-              <h4>💬 Start chatting with {character.name}!</h4>
+            <div className="text-center text-black mt-10">
+              <h3 className="text-xl font-semibold">
+                💬 Start chatting with {character.name}!
+              </h3>
             </div>
           )}
+
           {messages.map((msg, i) => (
             <MessageBubble key={i} sender={msg.sender} message={msg.message} />
           ))}
           <div ref={endRef}></div>
         </div>
 
-        <Form
+        {/* Input Box */}
+        <form
           onSubmit={sendMessage}
-          className="d-flex p-3 shadow-lg"
-          style={styles.inputArea}
+          className="p-4 flex gap-3 backdrop-blur-md border-t"
+          style={{
+            borderColor: bgColor,
+            backgroundColor: "rgba(255,255,255,0.9)",
+          }}
         >
-          <Form.Control
-            as="textarea"
-            rows={1}
-            placeholder={`Talk to ${character.name}...`}
+          <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault(); // stop newline
-                sendMessage(e); // send the message
+                e.preventDefault();
+                sendMessage(e);
               }
             }}
             disabled={loading}
-            className="px-3 py-2"
-            style={{ borderRadius: "20px", resize: "none" }}
+            rows={1}
+            style={{color : bgColor}}
+            placeholder={`Talk to ${character.name}...`}
+            className="flex-1 p-3 rounded-2xl border resize-none focus:outline-none shadow-sm"
           />
 
-          <Button
+          <button
             type="submit"
-            className="rounded-pill ms-2 px-4 fw-bold"
-            style={{
-              backgroundColor: bgColor,
-              border: "none",
-              color: "#fff",
-            }}
             disabled={loading}
+            style={{ backgroundColor: bgColor }}
+            className="px-6 py-2 rounded-full text-white font-semibold shadow-lg hover:opacity-90 transition"
           >
-            {loading ? <Spinner animation="border" size="sm" /> : "Send"}
-          </Button>
-        </Form>
-      </Container>
-    </motion.div>
+            {loading ? "..." : "Send"}
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }

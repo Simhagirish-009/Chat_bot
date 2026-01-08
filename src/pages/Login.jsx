@@ -1,16 +1,19 @@
 import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import API from "../api/axios";
+import { ToastContainer, toast } from "react-toastify";
+
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
-  Form,
-  Button,
   Card,
-  Container,
-  Alert,
-  Navbar,
-  Nav,
-} from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
@@ -19,82 +22,81 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
     try {
       localStorage.clear();
       const res = await API.post("login/", form);
+
       localStorage.setItem("access", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
       localStorage.setItem("username", res.data.username);
-      navigate("/chat");
-    } catch (err) {
-      setError("Invalid credentials");
+
+      // ✅ Success Toast
+      toast.success("Login Successful !!!");
+
+      // Small delay so toast is visible before navigation
+     setTimeout(() => {
+        navigate("/chat");
+      }, 2000);
+      
+    } catch {
+      setError("Invalid username or password");
     }
   };
 
   return (
-    <>
-      {/* Main Section */}
-      <Container
-        fluid
-        className="d-flex justify-content-center align-items-center vh-100"
-        style={{
-          background: "linear-gradient(135deg, #0d6efd 0%, #6610f2 100%)",
-        }}
-      >
-        <Card
-          className="p-4 shadow-lg border-0"
-          style={{
-            width: "100%",
-            maxWidth: "400px",
-            borderRadius: "20px",
-          }}
-        >
-          <h3 className="text-center mb-3 fw-bold text-dark">
-            Welcome Back 👋
-          </h3>
-          <p className="text-center text-muted mb-4">
-            Login to continue to your dashboard
-          </p>
+    <div className="min-h-screen body flex items-center justify-center ">
+      <Card className="w-full max-w-lg bg-slate-950/60  border-slate-800 shadow-2xl">
+        <CardHeader className="text-center space-y-2">
+          <CardTitle className="text-indigo-50 text-3xl font-extrabold">
+            Welcome Back
+          </CardTitle>
+          <CardDescription className="text-slate-400">
+            Login to continue your AI journey
+          </CardDescription>
+        </CardHeader>
 
-          {error && <Alert variant="danger">{error}</Alert>}
+        <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Control
-                placeholder="Username"
-                onChange={(e) => setForm({ ...form, username: e.target.value })}
-                className="py-2"
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-4">
-              <Form.Control
-                placeholder="Password"
-                type="password"
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="py-2"
-                required
-              />
-            </Form.Group>
-            <Button
-              type="submit"
-              variant="primary"
-              className="w-100 py-2 fw-semibold"
-              style={{ borderRadius: "10px" }}
-            >
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <Input
+              type="text"
+              placeholder="Username"
+              required
+              onChange={(e) => setForm({ ...form, username: e.target.value })}
+            />
+
+            <Input
+              type="password"
+              placeholder="Password"
+              required
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+            />
+
+            <Button type="submit" size="lg" className="w-full bg-blue-900">
               Login
             </Button>
-          </Form>
+          </form>
 
-          <p className="text-center mt-3 text-muted">
+          <p className="text-center text-sm text-slate-400 mt-6">
             Don’t have an account?{" "}
-            <a href="/register" className="text-decoration-none fw-semibold">
+            <Link
+              to="/register"
+              className="text-indigo-400 hover:text-indigo-300 font-medium"
+            >
               Register
-            </a>
+            </Link>
           </p>
-        </Card>
-      </Container>
-    </>
+        </CardContent>
+      </Card>
+      <ToastContainer/>
+    </div>
   );
 }
 

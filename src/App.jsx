@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
@@ -8,28 +8,34 @@ import ProtectedLayout from "./layouts/ProtectedLayout"; // ⬅️ import layout
 import CharacterSelect from "./pages/CharacterSelect";
 import History from "./pages/History";
 import CharacterChat from "./pages/CharacterChat";
+import "react-toastify/dist/ReactToastify.css";
+
 
 
 export default function App() {
   // const isAuthenticated = !!localStorage.getItem("access");
   return (
-    <Router>
-      <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<Welcome />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+    <>
+      
+      
+      <Router>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<Welcome />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* Protected routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route element={<ProtectedLayout />}>
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/charchat" element={<CharacterChat />} />
-            <Route path="/characters" element={<CharacterSelect />} />
-            <Route path="/history" element={<History/>}/>
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<ProtectedLayout />}>
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/charchat" element={<CharacterChat />} />
+              <Route path="/characters" element={<CharacterSelect />} />
+              <Route path="/history" element={<History />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </>
   );
 }
